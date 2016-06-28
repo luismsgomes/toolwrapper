@@ -2,13 +2,16 @@ from setuptools import setup, find_packages
 from os import path
 import re
 
+def packagefile(*relpath):
+    return path.join(path.dirname(__file__), *relpath)
+
 def read(*relpath):
-    with open(path.join(path.dirname(__file__), *relpath)) as fp:
-        return fp.read()
+    with open(packagefile(*relpath)) as f:
+        return f.read()
 
 def get_version(*relpath):
     match = re.search(
-        r'''^__version__ = ['']([^'']*)['']''',
+        r'''^__version__ = ['"]([^'"]*)['"]''',
         read(*relpath),
         re.M
     )

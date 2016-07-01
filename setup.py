@@ -21,7 +21,7 @@ def get_version(*relpath):
 
 setup(
     name='toolwrapper',
-    version=get_version('toolwrapper.py'),
+    version=get_version('src', 'toolwrapper.py'),
     description='A base class for wrapping text-processing tools',
     long_description=read('README.rst'),
     url='https://bitbucket.org/luismsgomes/toolwrapper',
@@ -37,5 +37,6 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
     keywords='subprocess text tool wrapper',
+    package_dir={'': 'src'},
     py_modules= ['toolwrapper'],
 )

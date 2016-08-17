@@ -1,13 +1,16 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 from os import path
 import re
+
 
 def packagefile(*relpath):
     return path.join(path.dirname(__file__), *relpath)
 
+
 def read(*relpath):
     with open(packagefile(*relpath)) as f:
         return f.read()
+
 
 def get_version(*relpath):
     match = re.search(
@@ -27,16 +30,16 @@ setup(
     url='https://bitbucket.org/luismsgomes/toolwrapper',
     author='Luís Gomes',
     author_email='luismsgomes@gmail.com',
-    license='Other/Proprietary License',
+    license='MIT',
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Topic :: Text Processing :: Filters',
-        'License :: Other/Proprietary License',
+        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.5',
     ],
     keywords='subprocess text tool wrapper',
     package_dir={'': 'src'},
-    py_modules= ['toolwrapper'],
+    py_modules=['toolwrapper'],
 )

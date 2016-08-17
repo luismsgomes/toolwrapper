@@ -1,10 +1,10 @@
 '''A module for interfacing with external text tools.
 
-2015 Luís Gomes <luismsgomes@gmail.com>
+Copyright ® 2015-2016 Luís Gomes <luismsgomes@gmail.com>
 '''
 
 
-__version__ = '0.1.1'
+__version__ = '0.2.0'
 
 
 import io
@@ -12,7 +12,8 @@ import logging
 import subprocess
 
 
-class ToolException(Exception): pass
+class ToolException(Exception):
+    pass
 
 
 class ToolWrapper:

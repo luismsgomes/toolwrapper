@@ -1,6 +1,13 @@
 syntax: glob
-*.egg-info
-__pycache__
+__pycache__/
+.cache/
+.python-version
+.mypy_cache/
+.vscode/
+.coverage
+.tox
+*.egg-info/
 *.pyc
-dist
-build
+build/
+dist/
+htmlcov/

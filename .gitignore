@@ -1,0 +1,12 @@
+__pycache__
+.cache
+.python-version
+.mypy_cache
+.vscode
+.coverage
+.tox
+*.egg-info
+*.pyc
+build
+dist
+htmlcov

@@ -10,7 +10,7 @@ import shutil
 import subprocess
 
 
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 
 class ToolException(Exception):
@@ -119,7 +119,12 @@ class ToolWrapper:
         if hasattr(self, 'closed') and not self.closed:
             self.logger.info('killing process %d', self.proc.pid)
             self.proc.kill()
+            self.proc.wait()
             self.closed = True
+            for attr in "stdin", "stdout", "stderr":
+                if hasattr(self, attr):
+                    getattr(self, attr).close()
+                    delattr(self, attr)
 
     def writeline(self, line):
         '''Write a line to the sub-process stdin'''
@@ -137,6 +142,7 @@ class ToolWrapper:
         line = self.stdout.readline().rstrip('\n')
         self.logger.debug('>> ' + line)
         return line
+
 
 if __name__ == '__main__':  # pragma: no cover
     from doctest import testmod

@@ -27,7 +27,7 @@ setup(
     version=get_version('src', 'toolwrapper.py'),
     description='A base class for wrapping text-processing tools',
     long_description=read('README.rst'),
-    url='https://bitbucket.org/luismsgomes/toolwrapper',
+    url='https://github.com/luismsgomes/toolwrapper',
     author='Luís Gomes',
     author_email='luismsgomes@gmail.com',
     license='MIT',

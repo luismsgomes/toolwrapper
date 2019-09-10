@@ -10,7 +10,7 @@ import shutil
 import subprocess
 
 
-__version__ = '0.4.1'
+__version__ = '1.0.0'
 
 
 class ToolException(Exception):
@@ -47,7 +47,10 @@ class ToolWrapper:
         self.stdbuf = stdbuf
         self.proc = None
         self.closed = True
-        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger = logging.getLogger('.'.join([
+            self.__class__.__module__,
+            self.__class__.__name__
+        ]))
         if start:
             self.start()
 

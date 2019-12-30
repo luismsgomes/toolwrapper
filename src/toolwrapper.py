@@ -6,11 +6,12 @@ Copyright ® 2015-2017 Luís Gomes <luismsgomes@gmail.com>
 
 import io
 import logging
+import os
 import shutil
 import subprocess
 
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
 
 
 class ToolException(Exception):
@@ -36,16 +37,27 @@ class ToolWrapper:
     >>> sed.close()
     """
 
-    def __init__(self, argv, encoding="utf-8", start=True, cwd=None, stdbuf=True):
+    @property
+    def _full_class_name_(self):
+        return ".".join([self.__class__.__module__, self.__class__.__name__])
+
+    def __init__(
+        self,
+        argv,
+        encoding="utf-8",
+        start=True,
+        cwd=None,
+        stdbuf=True,
+        env=None,
+    ):
         self.argv = argv
         self.encoding = encoding
         self.cwd = cwd
         self.stdbuf = stdbuf
+        self.env = env
         self.proc = None
         self.closed = True
-        self.logger = logging.getLogger(
-            ".".join([self.__class__.__module__, self.__class__.__name__])
-        )
+        self.logger = logging.getLogger(self._full_class_name_)
         if start:
             self.start()
 
@@ -60,12 +72,9 @@ class ToolWrapper:
 
     def __repr__(self):
         return (
-            "{self.__class__.__name__}({self.argv!r}, "
+            "{self._full_class_name_}({self.argv!r}, "
             "encoding={self.encoding!r}, cwd={self.cwd!r})".format(self=self)
         )
-
-    def __str__(self):
-        return self.__class__.__name__
 
     def _get_real_argv(self):
         if not self.stdbuf:
@@ -84,21 +93,23 @@ class ToolWrapper:
         if not self.closed:
             raise ToolException("not closed")
         self.logger.info("executing argv " + repr(self.argv))
+        if self.env:
+            env = dict(**os.environ)
+            env.update(self.env)
+        else:
+            env = None
         self.proc = subprocess.Popen(
             self._get_real_argv(),
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
             cwd=self.cwd,
+            env=env,
         )
         self.stdin = io.TextIOWrapper(
             self.proc.stdin, encoding=self.encoding, line_buffering=True
         )
         self.stdout = io.TextIOWrapper(
             self.proc.stdout, encoding=self.encoding, line_buffering=True
-        )
-        self.stderr = io.TextIOWrapper(
-            self.proc.stderr, encoding=self.encoding, line_buffering=True
         )
         self.closed = False
         self.logger.info("spawned process %d", self.proc.pid)
@@ -115,7 +126,7 @@ class ToolWrapper:
             self.proc.kill()
             self.proc.wait()
             self.closed = True
-            for attr in "stdin", "stdout", "stderr":
+            for attr in "stdin", "stdout":
                 if hasattr(self, attr):
                     getattr(self, attr).close()
                     delattr(self, attr)

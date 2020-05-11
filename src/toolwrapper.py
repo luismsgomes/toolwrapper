@@ -11,7 +11,7 @@ import shutil
 import subprocess
 
 
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 
 class ToolException(Exception):
@@ -48,12 +48,14 @@ class ToolWrapper:
         start=True,
         cwd=None,
         stdbuf=True,
+        stderr=None,
         env=None,
     ):
         self.argv = argv
         self.encoding = encoding
         self.cwd = cwd
         self.stdbuf = stdbuf
+        self.stderr = stderr
         self.env = env
         self.proc = None
         self.closed = True
@@ -102,6 +104,7 @@ class ToolWrapper:
             self._get_real_argv(),
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
+            stderr=self.stderr if self.stderr else subprocess.DEVNULL,
             cwd=self.cwd,
             env=env,
         )

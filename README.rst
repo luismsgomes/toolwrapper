@@ -30,3 +30,9 @@ Changelog
 * ``v0.1.0``
     - first working version (unreleased)
 
+TODO
+----
+
+* Implement timeout option for read and write operations.
+* Implement restart.
+

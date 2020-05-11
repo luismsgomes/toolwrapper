@@ -11,7 +11,7 @@ import shutil
 import subprocess
 
 
-__version__ = "2.0.1"
+__version__ = "2.0.2"
 
 
 class ToolException(Exception):
@@ -83,9 +83,8 @@ class ToolWrapper:
             return self.argv
         if shutil.which("stdbuf") is None:  # pragma: no cover
             self.logger.warning(
-                "stdbuf was not found; communication with %s may "
-                "hang due to stdio buffering.",
-                self.argv[0],
+                f"stdbuf was not found; communication with {self.argv[0]} may "
+                "hang due to stdio buffering."
             )
             return self.argv
         return ["stdbuf", "-i0", "-o0"] + self.argv
@@ -94,7 +93,7 @@ class ToolWrapper:
         """Launch the sub-process in background"""
         if not self.closed:
             raise ToolException("not closed")
-        self.logger.info("executing argv " + repr(self.argv))
+        self.logger.info(f"executing argv {self.argv!r}")
         if self.env:
             env = dict(**os.environ)
             env.update(self.env)
@@ -115,7 +114,7 @@ class ToolWrapper:
             self.proc.stdout, encoding=self.encoding, line_buffering=True
         )
         self.closed = False
-        self.logger.info("spawned process %d", self.proc.pid)
+        self.logger.info(f"spawned process {self.proc.pid}")
 
     def restart(self):
         """Terminates the existing sub-process and launches a new one"""
@@ -125,7 +124,7 @@ class ToolWrapper:
     def close(self):
         """Closes the pipe to the sub-process."""
         if hasattr(self, "closed") and not self.closed:
-            self.logger.info("killing process %d", self.proc.pid)
+            self.logger.info(f"killing process {self.proc.pid}")
             self.proc.kill()
             self.proc.wait()
             self.closed = True
@@ -138,7 +137,7 @@ class ToolWrapper:
         """Write a line to the sub-process stdin"""
         if self.closed:
             raise ToolException("closed")
-        self.logger.debug("<< %s", line)
+        self.logger.debug(f"<< {line}")
         self.stdin.write(line + "\n")
         self.stdin.flush()
 
@@ -148,7 +147,7 @@ class ToolWrapper:
             raise ToolException("closed")
         self.logger.debug("readline()")
         line = self.stdout.readline().rstrip("\n")
-        self.logger.debug(">> " + line)
+        self.logger.debug(f">> {line}")
         return line
 
 
